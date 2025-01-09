@@ -1,0 +1,36 @@
+# Node.js modules
+node_modules
+
+# Build directories
+dist
+build
+
+# Logs and temp files
+*.log
+*.tmp
+
+# IDE and editor config files
+.vscode
+.idea
+*.swp
+
+# Compiled JavaScript files
+*.js
+*.jsx
+*.mjs
+*.cjs
+
+# TypeScript declaration files
+*.d.ts
+
+# Test coverage output
+coverage
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+.env
+.env.local
+.env.production
+.env.test

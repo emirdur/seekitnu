@@ -1,0 +1,27 @@
+{
+  "name": "goseekitapp",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "workspaces": [
+    "src/shared",
+    "src/frontend",
+    "src/backend"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=src/frontend",
+    "dev:backend": "npm run dev --workspace=src/backend",
+    "prisma:migrate:dev": "cd src/backend; npx prisma migrate dev",
+    "prisma:generate:dev": "cd src/backend; npx prisma generate",
+    "prisma:studio:dev": "cd src/backend; npx prisma studio",
+    "build": "vite build",
+    "start": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.4.2"
+  }
+}
