@@ -11,11 +11,16 @@ COPY package.json package-lock.json tsconfig.json ./
 COPY ./src/backend src/backend
 COPY ./src/shared src/shared
 
+RUN mkdir -p /app/src/backend/uploads && chmod 755 /app/src/backend/uploads
+
+RUN npm run prisma:generate:dev
+
 # Install dependencies for all workspaces
 RUN npm install
 
 # Set environment variables
-ENV NODE_ENV=development
+RUN echo DATABASE_URL=\"postgresql://postgres:postgres@database:5432/postgres?schema=public\" > ./src/backend/.env
+RUN echo NODE_ENV=development >> ./src/backend/.env
 ENV PORT=5000
 
 # Expose the backend server port

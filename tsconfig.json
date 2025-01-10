@@ -23,7 +23,7 @@
     "alwaysStrict": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]

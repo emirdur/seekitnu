@@ -12,3 +12,11 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firebaseUid  String   @unique
+  displayName  String
+  imagePath    String
+  createdAt    DateTime @default(now())
+}

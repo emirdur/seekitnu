@@ -1,3 +1,51 @@
-node_modules
-# Keep environment variables out of version control
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+out/
+
+# Prisma
+prisma/migrations/
+.prisma/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+.dockerignore
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Uploads
+src/backend/uploads/
+
+# Other
+coverage/
