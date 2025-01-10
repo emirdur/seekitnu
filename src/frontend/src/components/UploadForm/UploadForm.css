@@ -1,0 +1,135 @@
+/* Main container styles */
+.upload-container {
+  height: 100vh;
+  text-align: center;
+  font-family: "Inter", Helvetica, sans-serif !important;
+}
+
+/* Title */
+.upload-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  margin-bottom: 30px;
+}
+
+/* Upload box */
+.upload-box {
+  width: 50%;
+  max-width: 450px;
+  height: 200px;
+  border: 2px dashed #ccc;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.upload-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.upload-or {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+/* Browse button */
+.custom-browse-button {
+  background-color: #32cd32 !important;
+  border: 3px solid #32cd32 !important;
+  border-radius: 50px !important;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700 !important;
+  color: #fff;
+  transition: 0.3s ease-in-out !important;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.custom-browse-button:hover {
+  background-color: #28a828 !important;
+  border: 3px solid #28a828 !important;
+}
+
+/* Submit button */
+.custom-submit-button {
+  background-color: #4169e1 !important;
+  border: 3px solid #4169e1 !important;
+  border-radius: 50px !important;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 700 !important;
+  color: #fff;
+  transition: 0.3s ease-in-out !important;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.custom-submit-button:hover {
+  background-color: #314ea7 !important;
+  border: 3px solid #314ea7 !important;
+}
+
+/* Existing styles remain unchanged */
+
+/* Hide the default file input field */
+.custom-file-input {
+  display: none;
+}
+
+/* Existing styles remain unchanged */
+
+/* Hide the default file input field */
+.custom-file-input {
+  display: none;
+}
+
+.custom-file-label {
+  cursor: pointer;
+}
+
+/* Style for file display */
+.file-list {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.file-list h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.file-list p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* Existing styles remain unchanged */
+
+/* Uploaded file name style */
+.uploaded-file-name {
+  font-size: 1rem;
+  color: black;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Error message styling */
+.error-text {
+  color: red;
+  font-size: 0.85rem; /* Slightly smaller text */
+  font-weight: 600; /* Slightly bolder text */
+  margin-top: 15px; /* Adds more spacing below the drag-and-drop area */
+  text-align: center;
+  line-height: 1.4; /* Improves readability */
+}
