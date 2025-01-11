@@ -5,13 +5,6 @@
   font-family: "Inter", Helvetica, sans-serif !important;
 }
 
-/* Title */
-.upload-title {
-  font-size: 2.5rem;
-  font-weight: 900;
-  margin-bottom: 30px;
-}
-
 /* Upload box */
 .upload-box {
   width: 50%;

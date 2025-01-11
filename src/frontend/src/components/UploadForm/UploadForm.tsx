@@ -6,6 +6,7 @@ import {
 } from "../../../../backend/src/storage/UploadTasks";
 import { useEffect, useState } from "react";
 import "./UploadForm.css";
+import Task from "../TaskComponent/TaskComponent";
 
 export const UploadForm = () => {
   const [task, setTask] = useState("Loading...");
@@ -85,7 +86,7 @@ export const UploadForm = () => {
 
   return (
     <Container className="upload-container d-flex flex-column align-items-center justify-content-center">
-      <h1 className="upload-title">{task}</h1>
+      <Task />
       <div
         className="upload-box"
         onDrop={handleDrop}
@@ -106,7 +107,7 @@ export const UploadForm = () => {
           onClick={() => document.getElementById("file-input")?.click()}
           style={{ cursor: "pointer" }}
         >
-          Browse Images
+          Browse
         </Button>
 
         {/* Hidden file input */}

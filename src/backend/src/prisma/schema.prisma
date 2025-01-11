@@ -20,3 +20,10 @@ model User {
   imagePath    String
   createdAt    DateTime @default(now())
 }
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  task      String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
