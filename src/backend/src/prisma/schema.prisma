@@ -20,3 +20,16 @@ model User {
   imagePath    String
   createdAt    DateTime @default(now())
 }
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  content   String
+}
+
+model Image {
+  id   Int    @id @default(autoincrement())
+  path String
+}
+
+

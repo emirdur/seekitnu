@@ -11,7 +11,7 @@ COPY package.json package-lock.json tsconfig.json ./
 COPY ./src/backend src/backend
 COPY ./src/shared src/shared
 
-RUN mkdir -p /app/src/backend/uploads && chmod 755 /app/src/backend/uploads
+RUN mkdir -p src/backend/uploads && chmod 755 src/backend/uploads
 
 RUN npm run prisma:generate:dev
 
@@ -19,8 +19,8 @@ RUN npm run prisma:generate:dev
 RUN npm install
 
 # Set environment variables
-RUN echo DATABASE_URL=\"postgresql://postgres:postgres@database:5432/goseekitapp?schema=public\" > ./src/backend/.env
-RUN echo NODE_ENV=development >> ./src/backend/.env
+RUN echo DATABASE_URL=\"postgresql://postgres:postgres@database:5432/goseekitapp?schema=public\" > src/backend/.env
+RUN echo NODE_ENV=development >> src/backend/.env
 ENV PORT=5000
 
 # Expose the backend server port

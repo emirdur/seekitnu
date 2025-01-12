@@ -1,11 +1,8 @@
 import { Button, Container, Toast, ToastContainer } from "react-bootstrap";
-import {
-  getTodaysTask,
-  initializeStorage,
-  loadFromLocalStorage,
-} from "../../../../backend/src/storage/UploadTasks";
 import { useEffect, useState } from "react";
 import "./UploadForm.css";
+import { TaskComponent } from "../TaskComponent/TaskComponent";
+import axios from "axios";
 
 export const UploadForm = () => {
   const [task, setTask] = useState("Loading...");
@@ -62,30 +59,34 @@ export const UploadForm = () => {
     }
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedFile) return;
 
-  useEffect(() => {
-    const tasks: string[] | null = loadFromLocalStorage(key);
+    const formData = new FormData();
+    formData.append("image", selectedFile);
 
-    const initialize = async () => {
-      const fetchInitialTasks = await initializeStorage();
-      if (fetchInitialTasks.length > 0) {
-        setTask(getTodaysTask(fetchInitialTasks));
-      } else {
-        alert("No tasks available.");
-      }
-    };
-
-    if (tasks === null) {
-      initialize();
-    } else {
-      setTask(getTodaysTask(tasks));
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      console.log("File uploaded:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
     }
-  }, []);
+  };
+
+  useEffect(() => {}, []);
 
   return (
     <Container className="upload-container d-flex flex-column align-items-center justify-content-center">
-      <h1 className="upload-title">{task}</h1>
+      <TaskComponent></TaskComponent>
       <div
         className="upload-box"
         onDrop={handleDrop}
