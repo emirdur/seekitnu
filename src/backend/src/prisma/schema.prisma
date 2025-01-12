@@ -28,8 +28,10 @@ model Task {
 }
 
 model Image {
-  id   Int    @id @default(autoincrement())
-  path String
+  id         Int      @id @default(autoincrement())
+  filename   String   // Store original file name
+  filePath   String   // Store path to file on server
+  mimetype   String   // Store MIME type (e.g., image/png)
+  size       Int      // Store image size in bytes
+  uploadedAt DateTime @default(now()) // Store the time the file was uploaded
 }
-
-
