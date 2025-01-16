@@ -1,17 +1,22 @@
-import { Routes, Route } from "react-router-dom";
-import { Home } from "./src/pages/Home";
-import { Auth } from "./src/pages/Auth";
-import { Upload } from "./src/pages/Upload";
+import { BrowserRouter } from "react-router-dom";
+
+import AuthProvider, { useAuth } from "./src/contexts/AuthContext"; // Import the context hook
+import { Loader } from "./src/components/Loader/Loader";
+import { AppRoutes } from "./src/routes/AppRoutes";
 
 const App = () => {
+  const { user, hasUploadedImage, loading } = useAuth();
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
-    <main className="main-content">
-      <Routes>
-        <Route path="/" element={<Auth />}></Route>
-        <Route path="/home" element={<Home />}></Route>
-        <Route path="/upload" element={<Upload />}></Route>
-      </Routes>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

@@ -1,9 +1,9 @@
 import React from "react";
 import { CardGrid } from "../CardGrid/CardGrid";
-import "./Home.css";
+import "./HomeComponent.css";
 import { Search } from "../Search/Search";
 
-export const Home: React.FC = () => {
+export const HomeComponent: React.FC = () => {
   return (
     <div className="home-container">
       <header className="navbar rounded shadow-sm">

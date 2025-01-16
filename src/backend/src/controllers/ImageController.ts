@@ -28,6 +28,7 @@ export const uploadImage = async (
 
     // Respond with success and file details
     res.status(200).json({
+      status: "success",
       message: "File uploaded successfully",
       file: newImage, // Send file details from the database
     });

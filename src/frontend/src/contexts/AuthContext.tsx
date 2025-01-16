@@ -14,11 +14,13 @@ import {
   firebaseSignUp,
 } from "../firebase/AuthService";
 import { FirebaseError } from "firebase/app";
-import { Spinner } from "react-bootstrap";
+import { Loader } from "../components/Loader/Loader";
 
 export interface IAuth {
   user: User | null;
   loading: boolean;
+  hasUploadedImage: boolean;
+  setHasUploadedImage: React.Dispatch<React.SetStateAction<boolean>>;
   signIn: (creds: LoginFormValues) => void;
   signUp: (creds: UserFormValues) => void;
   signOut: () => void;
@@ -31,6 +33,8 @@ export interface IAuth {
 const AuthContext = createContext<IAuth>({
   user: auth.currentUser,
   loading: false,
+  hasUploadedImage: false,
+  setHasUploadedImage: () => {},
   signIn: () => {},
   signUp: () => {},
   signOut: () => {},
@@ -44,6 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [hasUploadedImage, setHasUploadedImage] = useState<boolean>(false); // Declare and initialize here
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -140,10 +145,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const checkIfImageUploaded = async (userId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/users/${userId}/image`,
+      );
+      const data = await response.json();
+      if (response.ok && data.hasUploadedImage) {
+        setHasUploadedImage(true); // Set this state based on the API response
+        navigate("/home", { replace: true }); // Navigate to home if image uploaded
+      } else {
+        setHasUploadedImage(false);
+        navigate("/upload", { replace: true }); // Navigate to upload page if no image
+      }
+    } catch (error) {
+      console.error("Error checking image upload:", error);
+      setHasUploadedImage(false);
+      navigate("/upload", { replace: true });
+    }
+  };
+
   //create Auth Values
   const authValues: IAuth = {
     user: currentUser,
     loading: isLoading,
+    hasUploadedImage,
+    setHasUploadedImage,
     signIn,
     signUp,
     signOut,
@@ -159,8 +186,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
           setCurrentUser(user);
           setIsAuthLoading(false);
-          if (user) {
-            navigate("/upload", { replace: true });
+          if (currentUser) {
+            checkIfImageUploaded(currentUser.uid);
           }
         });
         return unsubscribe;
@@ -169,23 +196,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToastMessage("Persistence isn't saved.");
         setShowToast(true);
       });
-  }, [auth, navigate]);
+  }, [auth, currentUser]);
 
   if (isAuthLoading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <Loader></Loader>;
   }
 
   return (

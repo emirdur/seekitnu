@@ -41,7 +41,6 @@ export interface HorizontalLineWithWordProps {
 export interface User {
   username: string;
   email: string;
-  profilePicture: string;
 }
 
 export interface Image {

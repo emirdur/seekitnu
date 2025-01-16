@@ -1,6 +1,6 @@
 import React from "react";
-import "./Home.css";
+import { HomeComponent } from "../components/HomeComponent/HomeComponent";
 
-export const Home: React.FC = () => {
-  return <Home />;
-};
+export function Home() {
+  return <HomeComponent />;
+}
