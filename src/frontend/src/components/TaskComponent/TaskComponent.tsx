@@ -13,14 +13,17 @@ export const TaskComponent = () => {
     const fetchTask = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/get-task");
+        setTask("No task today.");
+        // const response = await fetch(
+        //   "http://localhost:5000/api/tasks/get-task",
+        // );
 
-        if (response.ok) {
-          const data = await response.json();
-          setTask(data.task);
-        } else {
-          throw new Error(`Error fetching task: ${response.statusText}`);
-        }
+        // if (response.ok) {
+        //   const data = await response.json();
+        //   setTask(data.task);
+        // } else {
+        //   throw new Error(`Error fetching task: ${response.statusText}`);
+        // }
       } catch (error) {
         setError("Failed to load task.");
         console.error("Error fetching task:", error);

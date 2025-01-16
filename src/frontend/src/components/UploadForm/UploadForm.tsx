@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import "./UploadForm.css";
 import { TaskComponent } from "../TaskComponent/TaskComponent";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const UploadForm = () => {
   const [task, setTask] = useState("Loading...");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const key = "tasks";
+
+  const navigate = useNavigate();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -68,7 +71,7 @@ export const UploadForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/upload",
+        "http://localhost:5000/api/images/upload",
         formData,
         {
           headers: {
@@ -77,6 +80,15 @@ export const UploadForm = () => {
         },
       );
       console.log("File uploaded:", response.data);
+
+      // Assuming the server returns the image URL in the response
+      if (response.data.status === "success") {
+        // Optionally, store the image URL in localStorage or sessionStorage
+        localStorage.setItem("uploadedImageUrl", response.data.imageUrl);
+
+        // Redirect to the Home page after upload
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
     }

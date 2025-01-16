@@ -13,15 +13,10 @@ export const Search: React.FC = () => {
   // If dependency array is blank then it will only be called once when that component renders
 
   return (
-    <>
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        ></input>
-      </form>
-    </>
+    <input
+      type="text"
+      className="form-control search-bar"
+      placeholder="Search"
+    />
   );
 };

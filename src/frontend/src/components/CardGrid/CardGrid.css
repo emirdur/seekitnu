@@ -1,0 +1,117 @@
+.custom-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+.custom-card:hover {
+  transform: scale(1.03);
+}
+
+.custom-card img {
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0) 85%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.overlay span {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.overlay .bi-star {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.like-container {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.like-container i {
+  transition: transform 0.2s;
+}
+
+.like-container:hover i {
+  transform: scale(1.2);
+}
+
+.custom-card img {
+  transition: transform 0.2s;
+}
+
+.custom-card img:hover {
+  transform: scale(1.02);
+}
+
+.modal-body img {
+  width: 100%;
+  height: auto;
+}
+
+.overlay {
+  pointer-events: none; /* Ensure overlay does not intercept clicks */
+}
+.overlay .like-container {
+  pointer-events: auto; /* Allow clicks only on interactive elements */
+}
+
+/* Remove modal border */
+.custom-modal .modal-content {
+  border: none;
+  box-shadow: none; /* Remove any shadow */
+}
+
+/* Optional: If you want to remove the header border too */
+.custom-modal .modal-header {
+  border-bottom: none;
+}
+
+.custom-modal .modal-body img {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0.5rem; /* Round only the bottom corners */
+  border-bottom-right-radius: 0.5rem; /* Round only the bottom corners */
+}
+
+.masonry-grid {
+  display: flex;
+  margin-left: -16px; /* Adjust spacing between columns */
+  width: auto;
+}
+
+.masonry-grid-column {
+  padding-left: 16px; /* Adjust spacing between columns */
+  background-clip: padding-box;
+}
+
+.custom-card {
+  margin-bottom: 16px; /* Spacing between items */
+}

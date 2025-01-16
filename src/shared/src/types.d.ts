@@ -64,3 +64,13 @@ export interface LoginFormValues {
 export interface UserFormValues extends LoginFormValues {
   username: string;
 }
+
+// -----------------------------------------------------------------
+// Card Grid Interface
+// -----------------------------------------------------------------
+interface CardData {
+  id: number;
+  username: string;
+  imageUrl: string;
+  likes: number;
+}
