@@ -10,7 +10,11 @@ type CardData = {
   likes: number;
 };
 
-export const CardGrid: React.FC = () => {
+interface CardGridProps {
+  searchTerm: string;
+}
+
+export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
   const [cards, setCards] = useState<CardData[]>([]);
   const [likedCards, setLikedCards] = useState<{ [key: number]: boolean }>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -80,6 +84,14 @@ export const CardGrid: React.FC = () => {
     setSelectedImage(null);
   };
 
+  const filteredCards = cards.filter((card) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      card.username.toLowerCase().includes(searchTermLower) ||
+      card.imageUrl.toLowerCase().includes(searchTermLower)
+    );
+  });
+
   const breakpointColumns = {
     default: 4,
     1100: 3,
@@ -98,7 +110,7 @@ export const CardGrid: React.FC = () => {
         className="masonry-grid"
         columnClassName="masonry-grid-column"
       >
-        {cards.map((card) => (
+        {filteredCards.map((card) => (
           <div className="custom-card position-relative" key={card.id}>
             <img
               src={`http://localhost:5000/uploads/${card.imageUrl}`} // Correct string interpolation
