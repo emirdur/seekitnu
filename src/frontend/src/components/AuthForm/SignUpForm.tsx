@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SignUpFormProps } from "../../../../shared/src/types";
+import { SignUpFormProps } from "../../../../shared/src/authTypes";
 import { useAuth } from "../../contexts/AuthContext";
 import "./AuthForm.css";
 import {

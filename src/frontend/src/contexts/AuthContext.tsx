@@ -6,8 +6,11 @@ import {
   setPersistence,
   User,
 } from "firebase/auth";
-import { LoginFormValues, UserFormValues } from "../../../shared/src/types";
-import { useNavigate } from "react-router-dom";
+import {
+  IAuth,
+  LoginFormValues,
+  UserFormValues,
+} from "../../../shared/src/authTypes";
 import {
   firebaseSignIn,
   firebaseSignOut,
@@ -15,26 +18,11 @@ import {
 } from "../firebase/AuthService";
 import { FirebaseError } from "firebase/app";
 import { Loader } from "../components/Loader/Loader";
-
-export interface IAuth {
-  user: User | null;
-  loading: boolean;
-  hasUploadedImage: boolean;
-  setHasUploadedImage: React.Dispatch<React.SetStateAction<boolean>>;
-  signIn: (creds: LoginFormValues) => void;
-  signUp: (creds: UserFormValues) => void;
-  signOut: () => void;
-  showToast: boolean;
-  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
-  toastMessage: string;
-  setToastMessage: React.Dispatch<React.SetStateAction<string>>;
-}
+import { useImageUpload } from "./ImageUploadContext"; // Keeping this for checking image upload
 
 const AuthContext = createContext<IAuth>({
   user: auth.currentUser,
   loading: false,
-  hasUploadedImage: false,
-  setHasUploadedImage: () => {},
   signIn: () => {},
   signUp: () => {},
   signOut: () => {},
@@ -48,10 +36,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
-  const [hasUploadedImage, setHasUploadedImage] = useState<boolean>(false); // Declare and initialize here
-  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const { checkIfImageUploaded } = useImageUpload();
 
   const errorHandling = (error: FirebaseError) => {
     switch (error?.code) {
@@ -82,20 +69,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setCurrentUser(user);
 
           // Send the username to the backend after the user signs up
-          const response = await fetch("http://localhost:5000/users", {
+          const response = await fetch("http://localhost:5000/users/signup", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              username: creds.username, // Assuming 'username' is part of 'creds'
-              firebaseUserId: user.uid, // Store the Firebase user ID in case you need it
+              username: creds.username,
+              firebaseUid: user.uid,
             }),
           });
 
           const data = await response.json();
           if (response.ok) {
-            navigate("/upload", { replace: true });
+            // Do not handle navigation here anymore
+            // Let AppRoutes handle navigation based on user status
           } else {
             setToastMessage(data.error || "Failed to save user data.");
             setShowToast(true);
@@ -119,7 +107,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { user } = signInResult;
         if (user) {
           setCurrentUser(user);
-          navigate("/upload", { replace: true });
+          checkIfImageUploaded(user.uid); // Check image upload status
         } else {
           setToastMessage("Authentication failed. Please try again later.");
           setShowToast(true);
@@ -137,7 +125,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await firebaseSignOut();
       setCurrentUser(null);
-      navigate("/", { replace: true });
+      // Do not handle navigation here either
+      // Let AppRoutes handle navigation after sign out
     } catch (error) {
       setIsLoading(false);
       setToastMessage("Sign out failed. Please try again later.");
@@ -145,32 +134,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const checkIfImageUploaded = async (userId: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/users/${userId}/image`,
-      );
-      const data = await response.json();
-      if (response.ok && data.hasUploadedImage) {
-        setHasUploadedImage(true); // Set this state based on the API response
-        navigate("/home", { replace: true }); // Navigate to home if image uploaded
-      } else {
-        setHasUploadedImage(false);
-        navigate("/upload", { replace: true }); // Navigate to upload page if no image
-      }
-    } catch (error) {
-      console.error("Error checking image upload:", error);
-      setHasUploadedImage(false);
-      navigate("/upload", { replace: true });
-    }
-  };
-
-  //create Auth Values
+  // Create Auth Values
   const authValues: IAuth = {
     user: currentUser,
     loading: isLoading,
-    hasUploadedImage,
-    setHasUploadedImage,
     signIn,
     signUp,
     signOut,
@@ -183,11 +150,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
           setCurrentUser(user);
           setIsAuthLoading(false);
-          if (currentUser) {
-            checkIfImageUploaded(currentUser.uid);
+          if (user) {
+            await checkIfImageUploaded(user.uid); // Check image upload on auth state change
           }
         });
         return unsubscribe;
@@ -196,10 +163,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToastMessage("Persistence isn't saved.");
         setShowToast(true);
       });
-  }, [auth, currentUser]);
+  }, [checkIfImageUploaded]);
 
   if (isAuthLoading) {
-    return <Loader></Loader>;
+    return <Loader />; // Show a loading spinner until auth state is resolved
   }
 
   return (

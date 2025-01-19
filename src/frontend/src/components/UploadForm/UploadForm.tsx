@@ -1,21 +1,18 @@
 import { Button, Container, Toast, ToastContainer } from "react-bootstrap";
-import { useEffect, useState } from "react";
-import "./UploadForm.css";
+import { useState, useEffect } from "react";
 import { TaskComponent } from "../TaskComponent/TaskComponent";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import { useImageUpload } from "../../contexts/ImageUploadContext";
+import "./UploadForm.css";
 
 export const UploadForm = () => {
-  const [task, setTask] = useState("Loading...");
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const key = "tasks";
-  const { setHasUploadedImage } = useAuth();
-
-  const navigate = useNavigate();
+  const { user } = useAuth(); // Get the authenticated user
+  const { hasUploadedImage, setHasUploadedImage } = useImageUpload(); // Get upload status and function
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const validImageTypes = [
     "image/jpeg",
@@ -68,8 +65,15 @@ export const UploadForm = () => {
     e.preventDefault();
     if (!selectedFile) return;
 
+    if (!user) {
+      setToastMessage("You must be logged in to upload an image.");
+      setShowToast(true);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("image", selectedFile);
+    formData.append("userId", user.uid); // Add userId to form data
 
     try {
       const response = await axios.post(
@@ -81,16 +85,17 @@ export const UploadForm = () => {
       );
 
       if (response.data.status === "success") {
-        console.log("Navigating to Home");
-        setHasUploadedImage(true);
-        navigate("/home", { replace: true });
+        setHasUploadedImage(true); // Update context to indicate image uploaded
+      } else {
+        setToastMessage("Upload failed. Please try again.");
+        setShowToast(true);
       }
     } catch (error) {
       console.error("Error uploading file:", error);
+      setToastMessage("Error uploading file. Please try again.");
+      setShowToast(true);
     }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <Container className="upload-container d-flex flex-column align-items-center justify-content-center">

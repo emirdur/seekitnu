@@ -21,19 +21,6 @@ export interface DisplayTextProps {
   styles?: string | React.CSSProperties;
 }
 
-export interface AuthFormProps {
-  authType: "login" | "signup";
-  setAuthType: (type: "login" | "signup") => void;
-}
-
-export interface LoginFormProps {
-  setAuthType: (type: "login" | "signup") => void;
-}
-
-export interface SignUpFormProps {
-  setAuthType: (type: "login" | "signup") => void;
-}
-
 export interface HorizontalLineWithWordProps {
   text: string;
 }
@@ -52,17 +39,6 @@ export interface ImageCardProps {
   image: Image;
 }
 
-// ------------------------------------------------------------------
-// Auth Interface
-// ------------------------------------------------------------------
-export interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-export interface UserFormValues extends LoginFormValues {
-  username: string;
-}
 
 // -----------------------------------------------------------------
 // Card Grid Interface

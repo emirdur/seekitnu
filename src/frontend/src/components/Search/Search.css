@@ -4,17 +4,13 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  transition: none; /* Disables all transitions for consistent behavior */
-  outline: none; /* Removes the default focus outline */
-  box-shadow: none; /* Removes shadow on focus */
-  -webkit-box-shadow: none; /* For WebKit browsers like Chrome and Safari */
-  -moz-box-shadow: none; /* For Firefox */
+  transition: none;
+  outline: none;
+  box-shadow: none;
 }
 
 .search-bar:focus {
-  border: 1px solid #ddd; /* Ensures no border change on focus */
-  outline: none; /* Removes the blue focus outline */
-  box-shadow: none; /* Prevents any shadow */
-  -webkit-box-shadow: none; /* WebKit-specific focus shadow removal */
-  -moz-box-shadow: none; /* Firefox-specific focus shadow removal */
+  border: 1px solid #ddd;
+  outline: none;
+  box-shadow: none;
 }
