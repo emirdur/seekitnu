@@ -15,7 +15,7 @@
     "prisma:generate:dev": "cd src/backend; npx prisma generate",
     "prisma:studio:dev": "cd src/backend; npx prisma studio",
     "docker:containerize:dev": "docker compose down && docker compose up --build --detach && sleep 5 && npm run docker:psql:init && npm run prisma:migrate:dev",
-    "docker:psql:init": "docker exec postgres_container psql -U postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'goseekitapp'\" | grep -q 1 || docker exec postgres_container psql -U postgres -c \"CREATE DATABASE goseekitapp;\"",
+    "docker:psql:init": "docker exec postgres_container psql -U postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'goseekitapp'\" | grep -q 1 && docker exec postgres_container psql -U postgres -c \"DROP DATABASE goseekitapp;\" || docker exec postgres_container psql -U postgres -c \"CREATE DATABASE goseekitapp;\"",
     "build": "vite build",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
