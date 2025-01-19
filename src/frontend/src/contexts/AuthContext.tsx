@@ -125,8 +125,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await firebaseSignOut();
       setCurrentUser(null);
-      // Do not handle navigation here either
-      // Let AppRoutes handle navigation after sign out
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       setToastMessage("Sign out failed. Please try again later.");

@@ -1,22 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "react-bootstrap"; // Import Modal from react-bootstrap
-import "./Account.css"; // Import the CSS file
+import { Modal } from "react-bootstrap";
+import "./Account.css";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Account: React.FC = () => {
   const navigate = useNavigate();
-  const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
+  const { user } = useAuth();
+  const [userData, setUserData] = useState<{
+    wins: number;
+    rank: number;
+    displayName: string;
+  } | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { signOut } = useAuth();
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (user?.uid) {
+      // Fetch user data from the backend using firebaseUid
+      fetch(`http://localhost:5000/users/${user.uid}`)
+        .then((response) => response.json())
+        .then((data) => setUserData(data))
+        .catch((error) => console.error("Error fetching user data:", error));
+    }
+  }, [user]);
 
   const handleBackClick = () => {
     navigate(-1);
   };
 
-  const handleLeaderboardClick = () => {
-    setIsModalVisible(true); // Show modal
+  const fetchLeaderboard = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/leaderboard/retrieveLeaderboard",
+      );
+      const data = await response.json();
+      setLeaderboard(data); // Set leaderboard state with the fetched data
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+    }
+  };
+
+  const handleLeaderboardClick = async () => {
+    setIsModalVisible(true);
+    await fetchLeaderboard();
   };
 
   const closeModal = () => {
-    setIsModalVisible(false); // Close modal
+    setIsModalVisible(false);
+  };
+
+  const handleSignOutClick = async () => {
+    await signOut();
   };
 
   return (
@@ -25,15 +61,18 @@ const Account: React.FC = () => {
         ←
       </button>
       <div className="content">
-        <h1>41 wins • #256</h1>
-        <h2>Username</h2>
+        {userData ? (
+          <h1>{`${userData.wins} wins • #${userData.rank}`}</h1>
+        ) : (
+          <h1>Loading...</h1>
+        )}
+        <h2>{userData?.displayName}</h2>
         <h4 onClick={handleLeaderboardClick}>Leaderboard</h4>
         <h4>Change Credentials</h4>
         <h4>Privacy Policy</h4>
-        <h4>Sign Out</h4>
+        <h4 onClick={handleSignOutClick}>Sign Out</h4>
       </div>
 
-      {/* React-Bootstrap Modal for Leaderboard */}
       <Modal
         show={isModalVisible}
         onHide={closeModal}
@@ -45,7 +84,15 @@ const Account: React.FC = () => {
           <Modal.Title>Leaderboard</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-3">
-          <p>1. Username</p>
+          {leaderboard.length === 0 ? (
+            <p>Loading...</p>
+          ) : (
+            leaderboard.map((user, index) => (
+              <p key={user.id}>
+                {index + 1}. {user.displayName} - {user.wins} wins
+              </p>
+            ))
+          )}
         </Modal.Body>
       </Modal>
     </div>

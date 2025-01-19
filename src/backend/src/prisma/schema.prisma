@@ -13,7 +13,7 @@ model User {
   imageId     Int?     // either image is uploaded or not
   image       Image?   
   wins        Int      @default(0)
-  rank        Int
+  rank        Int      @default(2147483647)
   userLikes   UserLike[] // one-to-many relationship representing the user's likes
   firebaseUid String?  @unique
 }
