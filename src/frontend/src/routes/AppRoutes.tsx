@@ -6,6 +6,7 @@ import { Auth } from "../pages/Auth";
 import { useImageUpload } from "../contexts/ImageUploadContext";
 import { Loader } from "../components/Loader/Loader";
 import { useEffect } from "react";
+import Account from "../components/Account/Account";
 
 export const AppRoutes = () => {
   const { user } = useAuth(); // Get the authenticated user
@@ -38,6 +39,7 @@ export const AppRoutes = () => {
       ) : (
         <>
           <Route path="/home" element={<Home />} />
+          <Route path="/account" element={<Account />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </>
       )}
