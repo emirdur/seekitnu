@@ -38,7 +38,6 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
     };
 
     const fetchUserLikes = async () => {
-      console.log(user?.uid);
       if (!user?.uid) return;
 
       try {
@@ -66,7 +65,6 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
   }, []);
 
   const toggleLike = async (id: number) => {
-    console.log("User ID:", user?.uid);
     if (!user?.uid) {
       console.error("User ID is undefined, cannot toggle like");
       return;

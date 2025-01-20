@@ -8,7 +8,7 @@ import "./UploadForm.css";
 
 export const UploadForm = () => {
   const { user } = useAuth(); // Get the authenticated user
-  const { hasUploadedImage, setHasUploadedImage } = useImageUpload(); // Get upload status and function
+  const { setHasUploadedImage } = useImageUpload(); // Get upload status and function
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showToast, setShowToast] = useState(false);

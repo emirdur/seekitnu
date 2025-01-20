@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const { checkIfImageUploaded } = useImageUpload();
+  const { setHasUploadedImage, checkIfImageUploaded } = useImageUpload();
 
   const errorHandling = (error: FirebaseError) => {
     switch (error?.code) {
@@ -66,8 +66,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then(async (signUpResult) => {
         const { user } = signUpResult;
         if (user) {
-          setCurrentUser(user);
-
           // Send the username to the backend after the user signs up
           const response = await fetch("http://localhost:5000/users/signup", {
             method: "POST",
@@ -82,8 +80,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           const data = await response.json();
           if (response.ok) {
-            // Do not handle navigation here anymore
-            // Let AppRoutes handle navigation based on user status
+            setHasUploadedImage(null);
+            setCurrentUser(user);
           } else {
             setToastMessage(data.error || "Failed to save user data.");
             setShowToast(true);
@@ -103,11 +101,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signIn = async (creds: LoginFormValues) => {
     setIsLoading(true);
     firebaseSignIn(creds)
-      .then((signInResult) => {
+      .then(async (signInResult) => {
         const { user } = signInResult;
         if (user) {
+          await checkIfImageUploaded(user.uid);
           setCurrentUser(user);
-          checkIfImageUploaded(user.uid); // Check image upload status
         } else {
           setToastMessage("Authentication failed. Please try again later.");
           setShowToast(true);
@@ -124,6 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
     try {
       await firebaseSignOut();
+      setHasUploadedImage(null);
       setCurrentUser(null);
       setIsLoading(false);
     } catch (error) {
@@ -150,11 +149,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
-          setCurrentUser(user);
-          setIsAuthLoading(false);
           if (user) {
             await checkIfImageUploaded(user.uid); // Check image upload on auth state change
           }
+          setCurrentUser(user);
+          setIsAuthLoading(false);
         });
         return unsubscribe;
       })

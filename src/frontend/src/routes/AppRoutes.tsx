@@ -5,24 +5,23 @@ import { Upload } from "../pages/Upload";
 import { Auth } from "../pages/Auth";
 import { useImageUpload } from "../contexts/ImageUploadContext";
 import { Loader } from "../components/Loader/Loader";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Account from "../components/Account/Account";
 
 export const AppRoutes = () => {
   const { user } = useAuth(); // Get the authenticated user
   const { hasUploadedImage, checkIfImageUploaded } = useImageUpload(); // Get upload status and function
+  const [loading, setLoading] = useState(true);
 
-  // Check if image is uploaded when user is authenticated
   useEffect(() => {
-    if (user && hasUploadedImage === null) {
-      checkIfImageUploaded(user.uid); // Trigger image upload check
+    if (user) {
+      checkIfImageUploaded(user.uid).finally(() => {
+        setLoading(false); // Stop loading after the check
+      });
+    } else {
+      setLoading(false); // Stop loading if no user
     }
-  }, [user, hasUploadedImage, checkIfImageUploaded]);
-
-  // Display a loader while checking if the image is uploaded
-  if (user && hasUploadedImage === null) {
-    return <Loader />;
-  }
+  }, [user, checkIfImageUploaded]);
 
   return (
     <Routes>

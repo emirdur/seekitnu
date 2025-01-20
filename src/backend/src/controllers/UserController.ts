@@ -10,7 +10,7 @@ export const checkUserImage = async (
   const { userId } = req.params; // This is the Firebase UID, not the database user ID
 
   try {
-    // Step 1: Find the user by their Firebase UID
+    // Step 1: Find the user by their Firebase htUID
     const user = await prisma.user.findUnique({
       where: { firebaseUid: userId },
     });
