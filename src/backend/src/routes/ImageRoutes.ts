@@ -1,6 +1,7 @@
 import express from "express";
 import upload from "../middlewares/MulterConfig"; // Import the multer configuration
 import {
+  getLikes,
   retrieveImages,
   toggleLike,
   uploadImage,
@@ -11,6 +12,7 @@ const router = express.Router();
 // Route to handle image upload
 router.get("/retrieveImages", retrieveImages);
 router.post("/:id/toggleLike", toggleLike);
+router.get("/:userId/likes", getLikes);
 router.post("/upload", upload.single("image"), uploadImage);
 
 export default router;

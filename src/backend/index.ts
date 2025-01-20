@@ -14,7 +14,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api/images", ImageRoutes); // Image routes
-app.use("/api/leaderboard", RankingRoutes); // Image routes
+app.use("/api/leaderboard", RankingRoutes);
 app.use("/users", UserRoutes); // User routes
 
 // Start the server

@@ -94,31 +94,128 @@ export const toggleLike = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { id } = req.params;
-  const { like } = req.body; // Boolean: true if liked, false if unliked
-
   try {
-    // Fetch the current like count
-    const image = await prisma.image.findUnique({
-      where: { id: parseInt(id, 10) },
-    });
+    const { firebaseUid } = req.body; // Firebase UID from the request body
+    const imageId = parseInt(req.params.id, 10); // Image ID from the route params
 
-    if (!image) {
-      res.status(404).json({ error: "Image not found" });
+    if (!firebaseUid || isNaN(imageId)) {
+      res.status(400).json({ error: "Invalid request" });
       return;
     }
 
-    // Update the like count
-    const updatedLikes = like ? image.likes + 1 : image.likes - 1;
-
-    const updatedImage = await prisma.image.update({
-      where: { id: parseInt(id, 10) },
-      data: { likes: updatedLikes },
+    // Fetch the userId from the database using firebaseUid
+    const user = await prisma.user.findUnique({
+      where: {
+        firebaseUid: firebaseUid, // Fetch the user using the firebase UID
+      },
+      select: {
+        id: true, // Get the userId
+      },
     });
 
-    res.status(200).json({ likes: updatedImage.likes });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    // Check if the user already liked the image
+    const existingLike = await prisma.userLike.findFirst({
+      where: {
+        userId: user.id, // Use the userId from the fetched user record
+        imageId,
+      },
+    });
+
+    if (existingLike) {
+      // User already liked the image, remove the like
+      await prisma.userLike.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+
+      // Decrement the like count on the image
+      await prisma.image.update({
+        where: {
+          id: imageId,
+        },
+        data: {
+          likes: {
+            decrement: 1,
+          },
+        },
+      });
+
+      res.status(200).json({ message: "Like removed" });
+    } else {
+      // User hasn't liked the image, add a new like
+      await prisma.userLike.create({
+        data: {
+          userId: user.id, // Use the userId
+          imageId,
+        },
+      });
+
+      // Increment the like count on the image
+      await prisma.image.update({
+        where: {
+          id: imageId,
+        },
+        data: {
+          likes: {
+            increment: 1,
+          },
+        },
+      });
+
+      res.status(201).json({ message: "Like added" });
+    }
   } catch (error) {
-    console.error("Error updating like count:", error);
+    console.error("Error toggling like:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// Route to fetch user's liked images
+export const getLikes = async (req: Request, res: Response): Promise<void> => {
+  const { userId: firebaseUid } = req.params;
+
+  if (!firebaseUid || firebaseUid.trim() === "") {
+    res.status(400).send("Invalid user ID");
+    return;
+  }
+
+  try {
+    // Fetch the user record based on firebaseUid to get the userId
+    const user = await prisma.user.findUnique({
+      where: {
+        firebaseUid: firebaseUid, // Fetch the user using the firebase UID
+      },
+      select: {
+        id: true, // Retrieve the userId (integer)
+      },
+    });
+
+    if (!user) {
+      res.status(404).send("User not found");
+      return;
+    }
+
+    // Now that you have the userId, query the UserLike model
+    const likedImages = await prisma.userLike.findMany({
+      where: {
+        userId: user.id, // Use the userId from the database
+      },
+      select: {
+        imageId: true,
+      },
+    });
+
+    const likedImageIds = likedImages.map((like) => like.imageId);
+
+    res.json(likedImageIds);
+  } catch (error) {
+    console.error("Error fetching liked images:", error);
+    res.status(500).send("Server Error");
   }
 };

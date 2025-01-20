@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Masonry from "react-masonry-css";
 import { Modal } from "react-bootstrap";
 import "./CardGrid.css";
+import { useAuth } from "../../contexts/AuthContext";
 
 type CardData = {
   id: number;
@@ -19,6 +20,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
   const [likedCards, setLikedCards] = useState<{ [key: number]: boolean }>({});
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -35,13 +37,55 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
       }
     };
 
+    const fetchUserLikes = async () => {
+      console.log(user?.uid);
+      if (!user?.uid) return;
+
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/images/${user.uid}/likes`, // Pass the firebase UID
+        );
+        const likedImageIds = await response.json();
+
+        const likedState = likedImageIds.reduce(
+          (acc: { [key: number]: boolean }, imageId: number) => {
+            acc[imageId] = true;
+            return acc;
+          },
+          {},
+        );
+
+        setLikedCards(likedState);
+      } catch (error) {
+        console.error("Error fetching liked images:", error);
+      }
+    };
+
     fetchImages();
+    fetchUserLikes();
   }, []);
 
   const toggleLike = async (id: number) => {
-    const isLiked = likedCards[id]; // Check current like status
+    console.log("User ID:", user?.uid);
+    if (!user?.uid) {
+      console.error("User ID is undefined, cannot toggle like");
+      return;
+    }
+
+    const isLiked = likedCards[id];
+
+    // Optimistically update UI
+    setLikedCards((prevState) => ({ ...prevState, [id]: !isLiked }));
+    setCards((prevCards) =>
+      prevCards.map((card) =>
+        card.id === id
+          ? { ...card, likes: card.likes + (isLiked ? -1 : 1) }
+          : card,
+      ),
+    );
 
     try {
+      // Send a request to toggle the like, passing firebaseUid instead of userId
       const response = await fetch(
         `http://localhost:5000/api/images/${id}/toggleLike`,
         {
@@ -49,30 +93,25 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ like: !isLiked }), // Send the opposite of the current state
+          body: JSON.stringify({ firebaseUid: user.uid }), // Pass the firebase UID here
         },
       );
 
       if (!response.ok) {
-        throw new Error("Failed to update like count");
+        throw new Error("Failed to toggle like");
       }
+    } catch (error) {
+      console.error("Error toggling like:", error);
 
-      const data = await response.json();
-
-      // Update the state with the new like count
+      // Roll back the optimistic update in case of an error
+      setLikedCards((prevState) => ({ ...prevState, [id]: isLiked }));
       setCards((prevCards) =>
         prevCards.map((card) =>
-          card.id === id ? { ...card, likes: data.likes } : card,
+          card.id === id
+            ? { ...card, likes: card.likes + (isLiked ? 1 : -1) }
+            : card,
         ),
       );
-
-      // Toggle the local like state
-      setLikedCards((prevState) => ({
-        ...prevState,
-        [id]: !prevState[id],
-      }));
-    } catch (error) {
-      console.error("Error updating like count:", error);
     }
   };
 
