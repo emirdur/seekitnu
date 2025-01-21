@@ -71,4 +71,4 @@ shared/*
 *.sln
 *.sw?
 
-.csv
+*.csv
