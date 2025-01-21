@@ -4,6 +4,7 @@ import path from "path";
 import ImageRoutes from "./src/routes/ImageRoutes"; // Assuming this path for Image Routes
 import UserRoutes from "./src/routes/UserRoutes"; // Add new routes for user-specific actions
 import RankingRoutes from "./src/routes/RankingRoutes";
+import TaskRoutes from "./src/routes/TaskRoutes";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes
 app.use("/api/images", ImageRoutes); // Image routes
 app.use("/api/leaderboard", RankingRoutes);
+app.use("/api/tasks", TaskRoutes);
 app.use("/users", UserRoutes); // User routes
 
 // Start the server

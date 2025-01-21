@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./TaskComponent.css";
 
 export const TaskComponent = () => {
-  const [task, setTask] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const errTask = "No task today. Go crazy!";
-  const loadTask = "Loading task...";
+  const [task, setTask] = useState<string | null>(null); // Allow `null` for task
+  const [loading, setLoading] = useState<boolean>(true); // Start with loading state
+  const [error, setError] = useState<string | null>(null); // Hold any error messages
 
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        setLoading(true);
-        setTask("No task today.");
-        // const response = await fetch(
-        //   "http://localhost:5000/api/tasks/get-task",
-        // );
-
-        // if (response.ok) {
-        //   const data = await response.json();
-        //   setTask(data.task);
-        // } else {
-        //   throw new Error(`Error fetching task: ${response.statusText}`);
-        // }
-      } catch (error) {
-        setError("Failed to load task.");
-        console.error("Error fetching task:", error);
+        const response = await fetch(
+          "http://localhost:5000/api/tasks/fetchTask",
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch the daily task");
+        }
+        const data = await response.json();
+        setTask(data.task); // Update task with fetched data
+      } catch (err) {
+        console.error("Error fetching daily task:", err);
+        setError("Unable to load today's task."); // Set error if fetch fails
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop the loading state
       }
     };
 
@@ -36,16 +29,16 @@ export const TaskComponent = () => {
   }, []);
 
   if (loading) {
-    return <h1 className="upload-title">{loadTask}</h1>;
+    return <h1 className="upload-title">Loading task...</h1>;
   }
 
   if (error) {
-    return <h1 className="upload-title">{errTask}</h1>;
+    return <h1 className="upload-title">{error}</h1>;
   }
 
   return (
     <>
-      <h1 className="upload-title">{task}</h1>
+      <h1 className="upload-title">{task || "No task today. Go crazy!"}</h1>
     </>
   );
 };

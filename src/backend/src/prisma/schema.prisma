@@ -34,3 +34,8 @@ model UserLike {
   user      User   @relation(fields: [userId], references: [id])
   image     Image  @relation(fields: [imageId], references: [id])
 }
+
+model DailyTask {
+  id    Int    @id @default(autoincrement())
+  task  String
+}

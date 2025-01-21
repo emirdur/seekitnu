@@ -47,6 +47,13 @@ async function updateRanks() {
 
 async function deleteAllUploads() {
   console.log('Deleting all uploads...');
+  const uploadsDir = path.join(__dirname, "..", "src", "backend", "uploads");
+  const files = fs.readdirSync(uploadsDir);
+
+  for (const file of files) {
+    const filePath = path.join(uploadsDir, file);
+    fs.unlinkSync(filePath); // Delete the file
+  }
   // Delete all images
   await prisma.image.deleteMany();
 }

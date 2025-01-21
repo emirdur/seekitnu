@@ -23,6 +23,10 @@ export const AppRoutes = () => {
     }
   }, [user, checkIfImageUploaded]);
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <Routes>
       {!user ? (

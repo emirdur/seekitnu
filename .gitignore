@@ -70,3 +70,5 @@ shared/*
 *.njsproj
 *.sln
 *.sw?
+
+.csv
