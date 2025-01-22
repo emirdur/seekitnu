@@ -60,7 +60,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
     // Check if a user with the same display name already exists
     const existingUserByDisplayName = await prisma.user.findFirst({
-      where: { displayName: username }, // Searching by display name
+      where: { displayName: username },
     });
 
     if (existingUserByDisplayName) {
@@ -68,7 +68,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Create a new user
+    // Create a new user if all checks pass
     const user = await prisma.user.create({
       data: {
         displayName: username,
@@ -78,7 +78,32 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json(user);
   } catch (error) {
+    console.error("Error during signup:", error);
     res.status(500).json({ error: "Failed to create user." });
+  }
+};
+
+// Endpoint to check if a username is available
+export const checkUsernameAvailability = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const { username } = req.params;
+
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: { displayName: username },
+    });
+
+    if (existingUser) {
+      res.status(200).json({ available: false }); // Username already taken
+      return;
+    }
+
+    res.status(200).json({ available: true }); // Username available
+    return;
+  } catch (error) {
+    res.status(500).json({ error: "Failed to check username availability." });
   }
 };
 

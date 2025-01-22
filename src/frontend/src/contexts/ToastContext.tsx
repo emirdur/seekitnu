@@ -37,6 +37,10 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
           bg={toast.type}
           delay={3000}
           autohide
+          style={{
+            width: "auto", // Automatically adjust to content
+            maxWidth: "max-content", // Prevent unnecessary extra space
+          }}
         >
           <Toast.Body className="text-white">{toast.message}</Toast.Body>
         </Toast>
