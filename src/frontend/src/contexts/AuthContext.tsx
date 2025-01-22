@@ -36,6 +36,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { setHasUploadedImage, checkIfImageUploaded } = useImageUpload();
   const { showToast } = useToast();
 
+  useEffect(() => {
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            await checkIfImageUploaded(user.uid); // Check image upload on auth state change
+          }
+          setCurrentUser(user);
+          setIsAuthLoading(false);
+        });
+        return unsubscribe;
+      })
+      .catch(() => {
+        showToast("Persistence isn't saved.", "danger");
+      });
+  }, [checkIfImageUploaded]);
+
   const errorHandling = (error: FirebaseError) => {
     switch (error?.code) {
       case "auth/invalid-email":
@@ -132,23 +149,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signUp,
     signOut,
   };
-
-  useEffect(() => {
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            await checkIfImageUploaded(user.uid); // Check image upload on auth state change
-          }
-          setCurrentUser(user);
-          setIsAuthLoading(false);
-        });
-        return unsubscribe;
-      })
-      .catch(() => {
-        showToast("Persistence isn't saved.", "danger");
-      });
-  }, [checkIfImageUploaded]);
 
   if (isAuthLoading) {
     return <Loader />; // Show a loading spinner until auth state is resolved

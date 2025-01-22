@@ -15,9 +15,9 @@ export const fetchTask = async (
     if (!dailyTask) {
       res.status(404).json({ task: "Task not found for today." });
       return;
+    } else {
+      res.json({ task: dailyTask.task });
     }
-
-    res.json({ task: dailyTask.task });
   } catch (error) {
     res.status(500).json({ task: "Error fetching the task." });
   }

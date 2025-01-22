@@ -14,13 +14,18 @@ export const AppRoutes = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      checkIfImageUploaded(user.uid).finally(() => {
-        setLoading(false); // Stop loading after the check
-      });
-    } else {
-      setLoading(false); // Stop loading if no user
-    }
+    const checkUploadStatus = async () => {
+      if (user) {
+        try {
+          await checkIfImageUploaded(user.uid);
+        } catch (error) {
+          console.error("Error checking upload status:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    checkUploadStatus();
   }, [user, checkIfImageUploaded]);
 
   if (loading) {
