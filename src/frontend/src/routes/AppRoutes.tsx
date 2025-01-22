@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import Account from "../components/Account/Account";
 
 export const AppRoutes = () => {
-  const { user } = useAuth(); // Get the authenticated user
+  const { user, loading: authLoading } = useAuth();
   const { hasUploadedImage, checkIfImageUploaded } = useImageUpload(); // Get upload status and function
   const [loading, setLoading] = useState(true);
 
@@ -25,8 +25,10 @@ export const AppRoutes = () => {
       setLoading(false);
     };
 
-    checkUploadStatus();
-  }, [user, checkIfImageUploaded]);
+    if (!authLoading) {
+      checkUploadStatus();
+    }
+  }, [user, authLoading, checkIfImageUploaded]);
 
   if (loading) {
     return <Loader />;

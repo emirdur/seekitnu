@@ -27,9 +27,14 @@ export const ImageUploadProvider = ({
       const response = await fetch(
         `http://localhost:5000/users/${userId}/image`,
       );
-      const data = await response.json();
-      const uploaded = response.ok && data.hasUploadedImage;
-      setHasUploadedImage(uploaded);
+
+      if (response.ok) {
+        const data = await response.json();
+        const uploaded = data.hasUploadedImage || false;
+        setHasUploadedImage(uploaded);
+      } else {
+        setHasUploadedImage(false);
+      }
     } catch (error) {
       setHasUploadedImage(false);
     }

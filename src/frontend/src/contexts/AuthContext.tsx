@@ -41,9 +41,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .then(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
           if (user) {
+            setCurrentUser(user);
             await checkIfImageUploaded(user.uid); // Check image upload on auth state change
+          } else {
+            setCurrentUser(user);
+            setHasUploadedImage(null);
           }
-          setCurrentUser(user);
           setIsAuthLoading(false);
         });
         return unsubscribe;
