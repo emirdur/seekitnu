@@ -6,10 +6,6 @@ export interface IAuth {
   signIn: (creds: LoginFormValues) => void;
   signUp: (creds: UserFormValues) => void;
   signOut: () => void;
-  showToast: boolean;
-  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
-  toastMessage: string;
-  setToastMessage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export interface LoginFormValues {

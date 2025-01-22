@@ -19,7 +19,6 @@ export const fetchTask = async (
 
     res.json({ task: dailyTask.task });
   } catch (error) {
-    console.error("Error fetching daily task:", error);
     res.status(500).json({ task: "Error fetching the task." });
   }
 };

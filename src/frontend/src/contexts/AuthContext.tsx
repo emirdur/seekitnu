@@ -19,6 +19,7 @@ import {
 import { FirebaseError } from "firebase/app";
 import { Loader } from "../components/Loader/Loader";
 import { useImageUpload } from "./ImageUploadContext"; // Keeping this for checking image upload
+import { useToast } from "./ToastContext";
 
 const AuthContext = createContext<IAuth>({
   user: auth.currentUser,
@@ -26,19 +27,14 @@ const AuthContext = createContext<IAuth>({
   signIn: () => {},
   signUp: () => {},
   signOut: () => {},
-  showToast: false,
-  setShowToast: () => {},
-  toastMessage: "",
-  setToastMessage: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
   const { setHasUploadedImage, checkIfImageUploaded } = useImageUpload();
+  const { showToast } = useToast();
 
   const errorHandling = (error: FirebaseError) => {
     switch (error?.code) {
@@ -47,16 +43,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       case "auth/wrong-password":
       case "auth/invalid-credential":
       case "auth/email-already-in-use":
-        setToastMessage("Invalid email or password. Please try again.");
-        setShowToast(true);
+        showToast("Invalid email or password. Please try again.", "danger");
         break;
       case "auth/weak-password":
-        setToastMessage("Passwords should be at least 6 characters long.");
-        setShowToast(true);
+        showToast("Passwords should be at least 6 characters long.", "danger");
         break;
       default:
-        setToastMessage("Oops, something went wrong! Please try again later.");
-        setShowToast(true);
+        showToast(
+          "Oops, something went wrong! Please try again later.",
+          "danger",
+        );
     }
   };
 
@@ -83,12 +79,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setHasUploadedImage(null);
             setCurrentUser(user);
           } else {
-            setToastMessage(data.error || "Failed to save user data.");
-            setShowToast(true);
+            showToast(data.error || "Failed to save user data.", "danger");
           }
         } else {
-          setToastMessage("Authentication failed. Please try again later.");
-          setShowToast(true);
+          showToast("Authentication failed. Please try again later.", "danger");
         }
         setIsLoading(false);
       })
@@ -107,8 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await checkIfImageUploaded(user.uid);
           setCurrentUser(user);
         } else {
-          setToastMessage("Authentication failed. Please try again later.");
-          setShowToast(true);
+          showToast("Authentication failed. Please try again later.", "danger");
         }
         setIsLoading(false);
       })
@@ -127,8 +120,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setToastMessage("Sign out failed. Please try again later.");
-      setShowToast(true);
+      showToast("Sign out failed. Please try again later.", "danger");
     }
   };
 
@@ -139,10 +131,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signIn,
     signUp,
     signOut,
-    showToast,
-    setShowToast,
-    toastMessage,
-    setToastMessage,
   };
 
   useEffect(() => {
@@ -158,8 +146,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return unsubscribe;
       })
       .catch(() => {
-        setToastMessage("Persistence isn't saved.");
-        setShowToast(true);
+        showToast("Persistence isn't saved.", "danger");
       });
   }, [checkIfImageUploaded]);
 

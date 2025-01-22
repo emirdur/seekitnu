@@ -31,7 +31,6 @@ export const ImageUploadProvider = ({
       const uploaded = response.ok && data.hasUploadedImage;
       setHasUploadedImage(uploaded);
     } catch (error) {
-      console.error("Error checking image upload:", error);
       setHasUploadedImage(false);
     }
   };

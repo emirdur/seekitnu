@@ -33,7 +33,6 @@ export const checkUserImage = async (
       res.status(200).json({ hasUploadedImage: false });
     }
   } catch (error) {
-    console.error("Error checking user image:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -79,7 +78,6 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json(user);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Failed to create user." });
   }
 };

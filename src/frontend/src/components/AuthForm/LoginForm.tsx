@@ -2,30 +2,26 @@ import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { LoginFormProps } from "../../../../shared/src/authTypes";
 import "./AuthForm.css";
-import {
-  Button,
-  Container,
-  Form,
-  Toast,
-  ToastContainer,
-} from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
+import { useToast } from "../../contexts/ToastContext";
 
 export const LoginForm: React.FC<LoginFormProps> = ({ setAuthType }) => {
   const { signIn, loading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { showToast, toastMessage, setShowToast, setToastMessage } = useAuth();
+  const { showToast } = useToast();
 
   const handleSignIn = async () => {
     if (!email || !password) {
-      setToastMessage("Please fill in all fields.");
-      setShowToast(true);
+      showToast("Please fill in all fields.", "danger");
       return;
     }
 
     try {
       await signIn({ email, password });
-    } catch (error) {}
+    } catch (error) {
+      showToast("Sign in failed. Please try again later.", "danger");
+    }
   };
 
   return (
@@ -64,18 +60,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setAuthType }) => {
           </Button>
         </Form>
       </div>
-      {/* Toast Container */}
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          delay={3000}
-          autohide
-          bg="danger"
-        >
-          <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
     </Container>
   );
 };

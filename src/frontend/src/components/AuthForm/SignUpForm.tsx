@@ -2,13 +2,8 @@ import React, { useState } from "react";
 import { SignUpFormProps } from "../../../../shared/src/authTypes";
 import { useAuth } from "../../contexts/AuthContext";
 import "./AuthForm.css";
-import {
-  Container,
-  Button,
-  ToastContainer,
-  Toast,
-  Form,
-} from "react-bootstrap";
+import { Container, Button, Form } from "react-bootstrap";
+import { useToast } from "../../contexts/ToastContext";
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({ setAuthType }) => {
   const { signUp, loading } = useAuth();
@@ -16,24 +11,24 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ setAuthType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { showToast, toastMessage, setShowToast, setToastMessage } = useAuth();
+  const { showToast } = useToast();
 
   const handleSignUp = async () => {
     if (!username || !email || !password || !confirmPassword) {
-      setToastMessage("Please fill in all fields.");
-      setShowToast(true);
+      showToast("Please fill in all fields.", "danger");
       return;
     }
 
     if (password !== confirmPassword) {
-      setToastMessage("Passwords do not match. Please try again.");
-      setShowToast(true);
+      showToast("Passwords do not match. Please try again.", "danger");
       return;
     }
 
     try {
       await signUp({ email, password, username });
-    } catch (error) {}
+    } catch (error) {
+      showToast("Sign up failed. Please try again later.", "danger");
+    }
   };
 
   return (
@@ -90,18 +85,6 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ setAuthType }) => {
           </Button>
         </Form>
       </div>
-      {/* Toast Container */}
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          delay={3000}
-          autohide
-          bg="danger"
-        >
-          <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
     </Container>
   );
 };

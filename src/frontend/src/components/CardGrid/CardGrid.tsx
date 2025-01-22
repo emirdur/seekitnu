@@ -3,6 +3,7 @@ import Masonry from "react-masonry-css";
 import { Modal } from "react-bootstrap";
 import "./CardGrid.css";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../contexts/ToastContext";
 
 type CardData = {
   id: number;
@@ -21,6 +22,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -32,7 +34,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
         setCards(data);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching images:", error);
+        showToast("Error fetching images.", "danger");
         setLoading(false);
       }
     };
@@ -56,7 +58,7 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
 
         setLikedCards(likedState);
       } catch (error) {
-        console.error("Error fetching liked images:", error);
+        showToast("Error fetching like count.", "danger");
       }
     };
 
@@ -66,7 +68,6 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
 
   const toggleLike = async (id: number) => {
     if (!user?.uid) {
-      console.error("User ID is undefined, cannot toggle like");
       return;
     }
 
@@ -96,11 +97,10 @@ export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to toggle like");
+        showToast("Error liking image.", "danger");
       }
     } catch (error) {
-      console.error("Error toggling like:", error);
-
+      showToast("Liked image state won't be saved.", "warning");
       // Roll back the optimistic update in case of an error
       setLikedCards((prevState) => ({ ...prevState, [id]: isLiked }));
       setCards((prevCards) =>

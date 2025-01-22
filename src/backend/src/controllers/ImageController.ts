@@ -58,7 +58,6 @@ export const uploadImage = async (
       image: newImage,
     });
   } catch (error) {
-    console.error("Error uploading file:", error);
     res.status(500).json({ message: "Error uploading file" });
   }
 };
@@ -85,7 +84,6 @@ export const retrieveImages = async (
 
     res.status(200).json(formattedImages);
   } catch (error) {
-    console.error("Error fetching images:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -171,7 +169,6 @@ export const toggleLike = async (
       res.status(201).json({ message: "Like added" });
     }
   } catch (error) {
-    console.error("Error toggling like:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -215,7 +212,6 @@ export const getLikes = async (req: Request, res: Response): Promise<void> => {
 
     res.json(likedImageIds);
   } catch (error) {
-    console.error("Error fetching liked images:", error);
     res.status(500).send("Server Error");
   }
 };

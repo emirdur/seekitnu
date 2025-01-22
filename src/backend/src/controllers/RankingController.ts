@@ -21,7 +21,6 @@ export const getLeaderboard = async (
     });
     res.json(users);
   } catch (error) {
-    console.error("Error fetching leaderboard:", error);
     res.status(500).send("Error fetching leaderboard");
   }
 };

@@ -3,6 +3,7 @@ import AuthProvider, { useAuth } from "./src/contexts/AuthContext"; // Import th
 import { Loader } from "./src/components/Loader/Loader";
 import { ImageUploadProvider } from "./src/contexts/ImageUploadContext";
 import { AppRoutes } from "./src/routes/AppRoutes";
+import { ToastProvider } from "./src/contexts/ToastContext";
 
 const App = () => {
   const { loading } = useAuth();
@@ -13,11 +14,13 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <ImageUploadProvider>
-          <AppRoutes />
-        </ImageUploadProvider>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <ImageUploadProvider>
+            <AppRoutes />
+          </ImageUploadProvider>
+        </AuthProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 };

@@ -1,18 +1,18 @@
 import { Button, Container, Toast, ToastContainer } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { TaskComponent } from "../TaskComponent/TaskComponent";
 import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
 import { useImageUpload } from "../../contexts/ImageUploadContext";
 import "./UploadForm.css";
+import { useToast } from "../../contexts/ToastContext";
 
 export const UploadForm = () => {
-  const { user } = useAuth(); // Get the authenticated user
-  const { setHasUploadedImage } = useImageUpload(); // Get upload status and function
+  const { user } = useAuth();
+  const { setHasUploadedImage } = useImageUpload();
+  const { showToast } = useToast();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const validImageTypes = [
     "image/jpeg",
@@ -29,12 +29,9 @@ export const UploadForm = () => {
     if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
       if (validImageTypes.includes(file.type)) {
-        setToastMessage(null);
-        setShowToast(false);
         setSelectedFile(file);
       } else {
-        setToastMessage("Only image files are allowed.");
-        setShowToast(true);
+        showToast("Only image files are allowed.", "danger");
         setSelectedFile(null);
       }
       event.dataTransfer.clearData();
@@ -50,12 +47,9 @@ export const UploadForm = () => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       if (validImageTypes.includes(file.type)) {
-        setToastMessage(null);
-        setShowToast(false);
         setSelectedFile(file);
       } else {
-        setToastMessage("Only image files are allowed.");
-        setShowToast(true);
+        showToast("Only image files are allowed.", "danger");
         setSelectedFile(null);
       }
     }
@@ -66,8 +60,7 @@ export const UploadForm = () => {
     if (!selectedFile) return;
 
     if (!user) {
-      setToastMessage("You must be logged in to upload an image.");
-      setShowToast(true);
+      showToast("You must be logged in to upload an image.", "danger");
       return;
     }
 
@@ -87,13 +80,10 @@ export const UploadForm = () => {
       if (response.data.status === "success") {
         setHasUploadedImage(true); // Update context to indicate image uploaded
       } else {
-        setToastMessage("Upload failed. Please try again.");
-        setShowToast(true);
+        showToast("Upload failed. Please try again.", "danger");
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
-      setToastMessage("Error uploading file. Please try again.");
-      setShowToast(true);
+      showToast("Error uploading file. Please try again.", "danger");
     }
   };
 
@@ -140,20 +130,6 @@ export const UploadForm = () => {
           Upload
         </Button>
       )}
-
-      {/* Toast Container */}
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          show={showToast}
-          onClose={() => setShowToast(false)}
-          delay={3000}
-          autohide
-          bg="danger"
-          style={{ width: "250px" }}
-        >
-          <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
     </Container>
   );
 };

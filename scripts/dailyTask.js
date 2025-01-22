@@ -45,7 +45,6 @@ const updateDailyTask = async () => {
 
     console.log(`Task updated for ${today}: ${todayTask.task}`);
   } catch (error) {
-    console.error("Error updating daily task:", error);
   } finally {
     await prisma.$disconnect();
   }

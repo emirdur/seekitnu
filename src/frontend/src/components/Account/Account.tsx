@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import "./Account.css";
 import { useAuth } from "../../contexts/AuthContext";
+import { useToast } from "../../contexts/ToastContext";
 
 const Account: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [userData, setUserData] = useState<{
     wins: number;
     rank: number;
@@ -22,7 +24,7 @@ const Account: React.FC = () => {
       fetch(`http://localhost:5000/users/${user.uid}`)
         .then((response) => response.json())
         .then((data) => setUserData(data))
-        .catch((error) => console.error("Error fetching user data:", error));
+        .catch(() => showToast("Error fetching user data.", "danger"));
     }
   }, [user]);
 
@@ -38,7 +40,7 @@ const Account: React.FC = () => {
       const data = await response.json();
       setLeaderboard(data); // Set leaderboard state with the fetched data
     } catch (error) {
-      console.error("Error fetching leaderboard:", error);
+      showToast("Error fetching leaderboard.", "danger");
     }
   };
 
