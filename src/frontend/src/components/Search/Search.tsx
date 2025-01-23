@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import "./Search.css"; // Optional: Separate styles for SearchBar
-
-interface SearchProps {
-  placeholder?: string; // Allow passing a placeholder as a prop
-  onSearch: (searchTerm: string) => void; // Prop to handle search term change
-}
+import { SearchProps } from "../../../../shared/src/types/ui";
 
 export const Search: React.FC<SearchProps> = ({
   placeholder = "Search",

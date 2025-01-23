@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { LoginFormProps } from "../../../../shared/src/authTypes";
+import { LoginFormProps } from "../../../../shared/src/types/authTypes";
 import "./AuthForm.css";
 import { Button, Container, Form } from "react-bootstrap";
 import { useToast } from "../../contexts/ToastContext";

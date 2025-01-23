@@ -4,17 +4,7 @@ import { Modal } from "react-bootstrap";
 import "./CardGrid.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { useToast } from "../../contexts/ToastContext";
-
-type CardData = {
-  id: number;
-  username: string;
-  imageUrl: string;
-  likes: number;
-};
-
-interface CardGridProps {
-  searchTerm: string;
-}
+import { CardData, CardGridProps } from "../../../../shared/src/types/card";
 
 export const CardGrid: React.FC<CardGridProps> = ({ searchTerm }) => {
   const [cards, setCards] = useState<CardData[]>([]);

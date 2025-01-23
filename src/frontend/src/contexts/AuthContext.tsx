@@ -10,7 +10,7 @@ import {
   IAuth,
   LoginFormValues,
   UserFormValues,
-} from "../../../shared/src/authTypes";
+} from "../../../shared/src/types/authTypes";
 import {
   firebaseSignIn,
   firebaseSignOut,
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const checkUsernameAvailability = async (username: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/users/checkUsername/${username}`,
+        `http://localhost:5000/api/users/checkUsername/${username}`,
       );
       const data = await response.json();
       return data.available;
@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (user) {
         // Step 3: Send the username to the backend after the user signs up
-        const response = await fetch("http://localhost:5000/users/signup", {
+        const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

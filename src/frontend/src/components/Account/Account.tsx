@@ -21,7 +21,7 @@ const Account: React.FC = () => {
   useEffect(() => {
     if (user?.uid) {
       // Fetch user data from the backend using firebaseUid
-      fetch(`http://localhost:5000/users/${user.uid}`)
+      fetch(`http://localhost:5000/api/users/${user.uid}`)
         .then((response) => response.json())
         .then((data) => setUserData(data))
         .catch(() => showToast("Error fetching user data.", "danger"));

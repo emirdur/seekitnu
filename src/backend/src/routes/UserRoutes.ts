@@ -8,10 +8,12 @@ import {
 
 const router = express.Router();
 
-// Route to check if a user has uploaded an image
-router.get("/:userId/image", checkUserImage);
-router.get("/:firebaseUid", getUser);
-router.get("/checkUsername/:username", checkUsernameAvailability);
+// Auth Routes
 router.post("/signup", signUp);
+router.get("/:firebaseUid", getUser);
+
+// User Routes
+router.get("/:userId/image", checkUserImage);
+router.get("/checkUsername/:username", checkUsernameAvailability);
 
 export default router;

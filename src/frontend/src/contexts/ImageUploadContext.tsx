@@ -25,7 +25,7 @@ export const ImageUploadProvider = ({
   const checkIfImageUploaded = async (userId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/users/${userId}/image`,
+        `http://localhost:5000/api/users/${userId}/image`,
       );
 
       if (response.ok) {

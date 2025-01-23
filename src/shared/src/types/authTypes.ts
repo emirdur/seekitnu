@@ -1,4 +1,4 @@
-import { User } from "firebase/auth"; // Firebase User type
+import { User } from "firebase/auth";
 
 export interface IAuth {
   user: User | null;
@@ -21,11 +21,11 @@ export interface AuthFormProps {
   authType: "login" | "signup";
   setAuthType: (type: "login" | "signup") => void;
 }
-  
+
 export interface LoginFormProps {
   setAuthType: (type: "login" | "signup") => void;
 }
-  
+
 export interface SignUpFormProps {
   setAuthType: (type: "login" | "signup") => void;
 }

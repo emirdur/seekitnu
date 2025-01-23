@@ -4,7 +4,10 @@ import {
   signOut,
 } from "firebase/auth";
 import { auth } from "./firebase";
-import { LoginFormValues, UserFormValues } from "../../../shared/src/authTypes";
+import {
+  LoginFormValues,
+  UserFormValues,
+} from "../../../shared/src/types/authTypes";
 
 export const firebaseSignIn = async ({ email, password }: LoginFormValues) => {
   const result = await signInWithEmailAndPassword(auth, email, password);

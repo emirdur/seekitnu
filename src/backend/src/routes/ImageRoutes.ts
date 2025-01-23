@@ -10,9 +10,14 @@ import {
 const router = express.Router();
 
 // Route to handle image upload
-router.get("/retrieveImages", retrieveImages);
-router.post("/:id/toggleLike", toggleLike);
+// Image Likes
 router.get("/:userId/likes", getLikes);
+router.post("/:id/toggleLike", toggleLike);
+
+// Images
+router.get("/retrieveImages", retrieveImages);
+
+// Uploads
 router.post("/upload", upload.single("image"), uploadImage);
 
 export default router;
