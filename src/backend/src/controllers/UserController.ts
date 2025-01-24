@@ -3,14 +3,20 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * Checks whether a user has already uploaded an image
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const checkUserImage = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { userId } = req.params; // This is the Firebase UID, not the database user ID
+  const { userId } = req.params;
 
   try {
-    // Step 1: Find the user by their Firebase htUID
+    // gets the user based on the firebase uid
     const user = await prisma.user.findUnique({
       where: { firebaseUid: userId },
     });
@@ -20,7 +26,7 @@ export const checkUserImage = async (
       return;
     }
 
-    // Step 2: Check if the user has an associated image
+    // gets the image (if there is one)
     const image = await prisma.image.findUnique({
       where: { userId: user.id },
     });
@@ -37,6 +43,12 @@ export const checkUserImage = async (
   }
 };
 
+/**
+ * Deals with signing up a user in the database (username wise)
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const signUp = async (req: Request, res: Response): Promise<void> => {
   const { username, firebaseUid } = req.body;
 
@@ -46,7 +58,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    // Check if a user with the same Firebase UID already exists
+    // check if a user already exists (just in case)
     const existingUserByUid = await prisma.user.findUnique({
       where: { firebaseUid },
     });
@@ -58,7 +70,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Check if a user with the same display name already exists
+    // check is display name taken (just in case)
     const existingUserByDisplayName = await prisma.user.findFirst({
       where: { displayName: username },
     });
@@ -68,7 +80,7 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Create a new user if all checks pass
+    // create a new user
     const user = await prisma.user.create({
       data: {
         displayName: username,
@@ -83,7 +95,12 @@ export const signUp = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Endpoint to check if a username is available
+/**
+ * Checks if username is available
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const checkUsernameAvailability = async (
   req: Request,
   res: Response,
@@ -96,22 +113,27 @@ export const checkUsernameAvailability = async (
     });
 
     if (existingUser) {
-      res.status(200).json({ available: false }); // Username already taken
+      res.status(200).json({ available: false });
       return;
     }
 
-    res.status(200).json({ available: true }); // Username available
+    res.status(200).json({ available: true });
     return;
   } catch (error) {
     res.status(500).json({ error: "Failed to check username availability." });
   }
 };
 
+/**
+ * Gets the user based on the firebase id
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   const { firebaseUid } = req.params;
 
   try {
-    // Fetch user data based on firebaseUid
     const user = await prisma.user.findUnique({
       where: { firebaseUid: firebaseUid },
       select: {
@@ -126,7 +148,6 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Send user data as a response
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });

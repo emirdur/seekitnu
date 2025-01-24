@@ -3,6 +3,11 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * Sorts the users in leaderboard order
+ * @param _req The request from the frontend
+ * @param res The response
+ */
 export const getLeaderboard = async (
   _req: Request,
   res: Response,

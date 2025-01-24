@@ -4,9 +4,13 @@ import {
   checkUsernameAvailability,
   getUser,
   signUp,
-} from "../controllers/UserController"; // Import the controller
+} from "../controllers/UserController";
 
 const router = express.Router();
+
+/**
+ * Handles the user routes like signing a user up, checking username availability, or getting the user.
+ */
 
 // Auth Routes
 router.post("/signup", signUp);

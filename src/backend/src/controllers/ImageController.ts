@@ -3,22 +3,29 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * Deals with uploading an image to the database
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const uploadImage = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  // get the firebase id from the frontend
   const { userId } = req.body;
 
+  // safety check
   if (!req.file) {
     res.status(400).json({ message: "No file uploaded" });
     return;
   }
 
-  const { path } = req.file; // Assuming multer provides `req.file` with `path`
-  const { filename } = req.file; // Assuming multer provides `req.file` with `path`
+  const { filename } = req.file;
 
   try {
-    // Check if the user exists
+    // check if the user exists
     const user = await prisma.user.findUnique({
       where: { firebaseUid: userId },
     });
@@ -28,7 +35,7 @@ export const uploadImage = async (
       return;
     }
 
-    // Check if the user already has an image
+    // check if the user already has an image
     const existingImage = await prisma.image.findUnique({
       where: { userId: user.id },
     });
@@ -38,7 +45,7 @@ export const uploadImage = async (
       return;
     }
 
-    // Create the image and link it to the user
+    // create the image and link it to the user
     const newImage = await prisma.image.create({
       data: {
         filePath: filename,
@@ -46,7 +53,7 @@ export const uploadImage = async (
       },
     });
 
-    // Update the user's `imageId` field
+    // update the user's imageId
     await prisma.user.update({
       where: { id: user.id },
       data: { imageId: newImage.id },
@@ -62,19 +69,26 @@ export const uploadImage = async (
   }
 };
 
+/**
+ * Retrieve all images in the database
+ * @param _req The request from the frontend
+ * @param res The response
+ */
 export const retrieveImages = async (
   _req: Request,
   res: Response,
 ): Promise<void> => {
   try {
+    // find all images
     const images = await prisma.image.findMany({
       include: {
         user: {
-          select: { displayName: true }, // Include username
+          select: { displayName: true },
         },
       },
     });
 
+    // parse the images into an array with relevant info
     const formattedImages = images.map((image) => ({
       id: image.id,
       username: image.user.displayName,
@@ -88,26 +102,32 @@ export const retrieveImages = async (
   }
 };
 
+/**
+ * Toggle the like button
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const toggleLike = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
   try {
-    const { firebaseUid } = req.body; // Firebase UID from the request body
-    const imageId = parseInt(req.params.id, 10); // Image ID from the route params
+    const { firebaseUid } = req.body;
+    const imageId = parseInt(req.params.id, 10); // convert imageid into integer
 
     if (!firebaseUid || isNaN(imageId)) {
       res.status(400).json({ error: "Invalid request" });
       return;
     }
 
-    // Fetch the userId from the database using firebaseUid
+    // fetch the userid
     const user = await prisma.user.findUnique({
       where: {
-        firebaseUid: firebaseUid, // Fetch the user using the firebase UID
+        firebaseUid: firebaseUid,
       },
       select: {
-        id: true, // Get the userId
+        id: true,
       },
     });
 
@@ -116,23 +136,23 @@ export const toggleLike = async (
       return;
     }
 
-    // Check if the user already liked the image
+    // check if user already liked the image
     const existingLike = await prisma.userLike.findFirst({
       where: {
-        userId: user.id, // Use the userId from the fetched user record
+        userId: user.id,
         imageId,
       },
     });
 
     if (existingLike) {
-      // User already liked the image, remove the like
+      // user already liked the image, remove the like
       await prisma.userLike.delete({
         where: {
           id: existingLike.id,
         },
       });
 
-      // Decrement the like count on the image
+      // decrement the like count on the image
       await prisma.image.update({
         where: {
           id: imageId,
@@ -146,15 +166,15 @@ export const toggleLike = async (
 
       res.status(200).json({ message: "Like removed" });
     } else {
-      // User hasn't liked the image, add a new like
+      // user hasn't liked the image, add a new like
       await prisma.userLike.create({
         data: {
-          userId: user.id, // Use the userId
+          userId: user.id,
           imageId,
         },
       });
 
-      // Increment the like count on the image
+      // increment the like count on the image
       await prisma.image.update({
         where: {
           id: imageId,
@@ -173,7 +193,12 @@ export const toggleLike = async (
   }
 };
 
-// Route to fetch user's liked images
+/**
+ * Gets the users liked images
+ * @param req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const getLikes = async (req: Request, res: Response): Promise<void> => {
   const { userId: firebaseUid } = req.params;
 
@@ -183,13 +208,13 @@ export const getLikes = async (req: Request, res: Response): Promise<void> => {
   }
 
   try {
-    // Fetch the user record based on firebaseUid to get the userId
+    // fetch the user record based on firebaseUid to get the userId
     const user = await prisma.user.findUnique({
       where: {
-        firebaseUid: firebaseUid, // Fetch the user using the firebase UID
+        firebaseUid: firebaseUid,
       },
       select: {
-        id: true, // Retrieve the userId (integer)
+        id: true,
       },
     });
 
@@ -198,10 +223,10 @@ export const getLikes = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Now that you have the userId, query the UserLike model
+    // query all likes from the user from userlike
     const likedImages = await prisma.userLike.findMany({
       where: {
-        userId: user.id, // Use the userId from the database
+        userId: user.id,
       },
       select: {
         imageId: true,

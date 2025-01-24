@@ -1,15 +1,14 @@
 import express from "express";
-import cors from "cors"; // For handling cross-origin requests
+import cors from "cors";
 import path from "path";
-import ImageRoutes from "./src/routes/ImageRoutes"; // Assuming this path for Image Routes
-import UserRoutes from "./src/routes/UserRoutes"; // Add new routes for user-specific actions
+import ImageRoutes from "./src/routes/ImageRoutes";
+import UserRoutes from "./src/routes/UserRoutes";
 import TaskRoutes from "./src/routes/TaskRoutes";
 import RankingRoutes from "./src/routes/RankingRoutes";
 
 const app = express();
 
-// Middleware to parse JSON and handle static files
-app.use(cors()); // Enable cross-origin requests
+app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

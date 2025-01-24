@@ -3,7 +3,9 @@ import { getLeaderboard } from "../controllers/RankingController";
 
 const router = express.Router();
 
-// Route to handle image upload
+/**
+ * Handles ranking routes like fetching the leaderboard, streaks, or comparing wins.
+ */
 router.get("/retrieveLeaderboard", getLeaderboard);
 
 export default router;

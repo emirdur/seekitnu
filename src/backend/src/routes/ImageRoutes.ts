@@ -7,10 +7,12 @@ import {
   uploadImage,
 } from "../controllers/ImageController"; // Adjust import based on your file structure
 
+/**
+ * Handles image routes like retrieving, like handling, or even uploading.
+ */
 const router = express.Router();
 
-// Route to handle image upload
-// Image Likes
+// Likes
 router.get("/:userId/likes", getLikes);
 router.post("/:id/toggleLike", toggleLike);
 

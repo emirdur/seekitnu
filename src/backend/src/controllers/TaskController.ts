@@ -3,6 +3,12 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * Fetches the task from the database
+ * @param _req The request from the frontend
+ * @param res The response
+ * @returns void
+ */
 export const fetchTask = async (
   _req: Request,
   res: Response,

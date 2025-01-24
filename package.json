@@ -2,7 +2,7 @@
   "name": "goseekitapp",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/backend/index.js",
   "workspaces": [
     "src/shared",
     "src/frontend",
@@ -16,15 +16,23 @@
     "prisma:studio:dev": "cd src/backend; npx prisma studio",
     "docker:containerize:dev": "docker compose down && docker compose up --build --detach && sleep 5 && npm run docker:psql:init && npm run prisma:migrate:dev",
     "docker:psql:init": "docker exec postgres_container psql -U postgres -tc \"SELECT 1 FROM pg_database WHERE datname = 'goseekitapp'\" | grep -q 1 && docker exec postgres_container psql -U postgres -c \"DROP DATABASE goseekitapp;\" || docker exec postgres_container psql -U postgres -c \"CREATE DATABASE goseekitapp;\"",
+    "docs:generate": "npx typedoc --entryPointStrategy expand --tsconfig ./src/frontend/tsconfig.json src",
+    "docs:serve": "http-server docs",
     "build": "vite build",
     "start": "node dist/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "prettier": "3.4.2"
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "prettier": "3.4.2",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "typedoc": "^0.27.6"
   },
   "dependencies": {
     "axios": "^1.7.9"
