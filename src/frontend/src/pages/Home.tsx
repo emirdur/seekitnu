@@ -1,4 +1,3 @@
-import React from "react";
 import { HomeComponent } from "../components/HomeComponent/HomeComponent";
 
 export function Home() {

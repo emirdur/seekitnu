@@ -10,21 +10,21 @@ datasource db {
 model User {
   id          Int      @id @default(autoincrement())
   displayName String   @unique
-  imageId     Int?     // Each user can have at most one image
-  image       Image?   // One-to-one relationship with Image (optional)
+  imageId     Int?
+  image       Image? 
   wins        Int      @default(0)
   rank        Int      @default(2147483647)
-  userLikes   UserLike[] // Many-to-many relationship (user can like many images)
+  userLikes   UserLike[]
   firebaseUid String?  @unique
 }
 
 model Image {
   id        Int      @id @default(autoincrement())
   filePath  String
-  userId    Int      @unique // Foreign key to the User model, one-to-many relationship
-  user      User     @relation(fields: [userId], references: [id]) // One user can have many images
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
   likes     Int      @default(0)
-  userLikes UserLike[] // Many-to-many relationship (image can be liked by many users)
+  userLikes UserLike[]
 }
 
 model UserLike {

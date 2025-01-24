@@ -1,15 +1,9 @@
 import { createContext, useContext, useState } from "react";
-
-// Update the interface to include setHasUploadedImage
-interface IImageUpload {
-  hasUploadedImage: boolean | null; // null for the loading state
-  setHasUploadedImage: React.Dispatch<React.SetStateAction<boolean | null>>; // Function to update the state
-  checkIfImageUploaded: (userId: string) => Promise<void>;
-}
+import { IImageUpload } from "../../../shared/src/types/imageUpload";
 
 const ImageUploadContext = createContext<IImageUpload>({
   hasUploadedImage: null,
-  setHasUploadedImage: () => {}, // No-op default function
+  setHasUploadedImage: () => {},
   checkIfImageUploaded: async () => {},
 });
 

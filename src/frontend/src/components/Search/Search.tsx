@@ -16,6 +16,7 @@ export const Search: React.FC<SearchProps> = ({
 
   return (
     <input
+      id="search"
       type="text"
       className="form-control search-bar"
       placeholder={placeholder}

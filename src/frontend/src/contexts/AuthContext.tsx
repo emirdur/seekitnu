@@ -18,7 +18,7 @@ import {
 } from "../firebase/AuthService";
 import { FirebaseError } from "firebase/app";
 import { Loader } from "../components/Loader/Loader";
-import { useImageUpload } from "./ImageUploadContext"; // Keeping this for checking image upload
+import { useImageUpload } from "./ImageUploadContext";
 import { useToast } from "./ToastContext";
 
 const AuthContext = createContext<IAuth>({
@@ -109,7 +109,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
 
     try {
-      // Step 1: Check if the username is available
       const isUsernameAvailable = await checkUsernameAvailability(
         creds.username,
       );
@@ -120,10 +119,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           "danger",
         );
         setIsLoading(false);
-        return; // Exit early if the username is taken
+        return;
       }
 
-      // Step 2: Proceed with Firebase signup
       const signUpResult = await firebaseSignUp(creds);
       const { user } = signUpResult;
 
@@ -150,10 +148,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
-        // Now TypeScript knows `error` has a `message` property
         errorHandling(error);
       } else {
-        // Handle case where the error is not an instance of Error
         showToast("An unknown error occurred. Please try again.", "danger");
       }
     } finally {
@@ -193,7 +189,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // Create Auth Values
   const authValues: IAuth = {
     user: currentUser,
     loading: isLoading,
@@ -203,7 +198,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   if (isAuthLoading) {
-    return <Loader />; // Show a loading spinner until auth state is resolved
+    return <Loader />;
   }
 
   return (

@@ -10,7 +10,7 @@ import Account from "../components/Account/Account";
 
 export const AppRoutes = () => {
   const { user, loading: authLoading } = useAuth();
-  const { hasUploadedImage, checkIfImageUploaded } = useImageUpload(); // Get upload status and function
+  const { hasUploadedImage, checkIfImageUploaded } = useImageUpload();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

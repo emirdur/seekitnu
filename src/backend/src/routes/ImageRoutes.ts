@@ -1,11 +1,11 @@
 import express from "express";
-import upload from "../middlewares/MulterConfig"; // Import the multer configuration
+import upload from "../middlewares/MulterConfig";
 import {
   getLikes,
   retrieveImages,
   toggleLike,
   uploadImage,
-} from "../controllers/ImageController"; // Adjust import based on your file structure
+} from "../controllers/ImageController";
 
 /**
  * Handles image routes like retrieving, like handling, or even uploading.

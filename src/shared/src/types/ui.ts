@@ -29,3 +29,10 @@ export interface SearchProps {
   placeholder?: string; // Allow passing a placeholder as a prop
   onSearch: (searchTerm: string) => void; // Prop to handle search term change
 }
+
+export interface ToastContextProps {
+  showToast: (
+    message: string,
+    type?: "success" | "danger" | "info" | "warning",
+  ) => void;
+}

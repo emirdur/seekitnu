@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
-
-interface ToastContextProps {
-  showToast: (
-    message: string,
-    type?: "success" | "danger" | "info" | "warning",
-  ) => void;
-}
+import { ToastContextProps } from "../../../shared/src/types/ui";
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 

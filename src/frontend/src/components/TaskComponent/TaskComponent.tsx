@@ -3,8 +3,8 @@ import "./TaskComponent.css";
 import { useToast } from "../../contexts/ToastContext";
 
 export const TaskComponent = () => {
-  const [task, setTask] = useState<string | null>(null); // Allow `null` for task
-  const [loading, setLoading] = useState<boolean>(true); // Start with loading state
+  const [task, setTask] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -18,9 +18,9 @@ export const TaskComponent = () => {
           return;
         }
         const data = await response.json();
-        setTask(data.task); // Update task with fetched data
+        setTask(data.task);
       } finally {
-        setLoading(false); // Stop the loading state
+        setLoading(false);
       }
     };
 
