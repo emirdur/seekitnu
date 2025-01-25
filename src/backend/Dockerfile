@@ -19,8 +19,7 @@ RUN npm run prisma:generate:dev
 RUN npm install
 
 # Set environment variables
-RUN echo DATABASE_URL=\"postgresql://postgres:postgres@database:5432/goseekitapp?schema=public\" > src/backend/.env
-RUN echo NODE_ENV=development >> src/backend/.env
+COPY ./src/backend/.env.docker /app/src/backend/.env
 ENV PORT=5000
 
 # Expose the backend server port
