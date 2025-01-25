@@ -126,7 +126,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { user } = signUpResult;
 
       if (user) {
-        // Step 3: Send the username to the backend after the user signs up
         const response = await fetch("http://localhost:5000/api/users/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -157,23 +156,50 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const checkUserInDatabase = async (firebaseUid: string): Promise<boolean> => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/${firebaseUid}`,
+      );
+      if (response.status === 200) {
+        const data = await response.json();
+        return data.exists;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const signIn = async (creds: LoginFormValues) => {
     setIsLoading(true);
-    firebaseSignIn(creds)
-      .then(async (signInResult) => {
-        const { user } = signInResult;
-        if (user) {
+
+    try {
+      const signInResult = await firebaseSignIn(creds);
+      const { user } = signInResult;
+
+      if (user) {
+        const userExists = await checkUserInDatabase(user.uid);
+
+        if (userExists) {
           await checkIfImageUploaded(user.uid);
           setCurrentUser(user);
         } else {
-          showToast("Authentication failed. Please try again later.", "danger");
+          showToast("User does not exist in the database.", "danger");
+          await firebaseSignOut();
         }
-        setIsLoading(false);
-      })
-      .catch((error) => {
+      } else {
+        showToast("Authentication failed. Please try again later.", "danger");
+      }
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
         errorHandling(error);
-        setIsLoading(false);
-      });
+      } else {
+        showToast("Something went wrong. Please try again later.", "danger");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const signOut = async () => {

@@ -20,13 +20,19 @@ const Account: React.FC = () => {
 
   useEffect(() => {
     if (user?.uid) {
-      // Fetch user data from the backend using firebaseUid
       fetch(`http://localhost:5000/api/users/${user.uid}`)
         .then((response) => response.json())
-        .then((data) => setUserData(data))
+        .then((data) => {
+          if (data.exists) {
+            setUserData(data.user);
+          } else {
+            showToast("User does not exist in the database.", "danger");
+            signOut();
+          }
+        })
         .catch(() => showToast("Error fetching user data.", "danger"));
     }
-  }, [user]);
+  }, [user, showToast, signOut]);
 
   const handleBackClick = () => {
     navigate(-1);

@@ -144,12 +144,17 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (!user) {
-      res.status(404).json({ error: "User not found" });
+      res.json({ exists: false });
       return;
     }
 
-    res.json(user);
+    // If user exists, return exists: true and user data
+    res.json({ exists: true, user });
+    return;
   } catch (error) {
+    // If an error occurs, handle the error and return a response with status 500
+    console.error(error); // For logging purposes, you may want to log the error details
     res.status(500).json({ error: "Internal Server Error" });
+    return;
   }
 };
