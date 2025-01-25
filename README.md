@@ -45,7 +45,7 @@ Next, sign up for a Firebase account, as authentication is handled through this 
 
 ### 4. Bridge OpenAI
 
-The way this application works is by relying on OpenAI to generate the tasks, and then falling back on a CSV file in case there's any fetch fails with the OpenAI API. Therefore, you must sign up for an OpenAI API account and add the configuration key to the .env file in the backend.
+The way this application works is by relying on OpenAI to generate the tasks, and then falling back on a CSV file in case there's any fetch fails with the OpenAI API. Therefore, you must sign up for an OpenAI API account and add the configuration key to the .env file in the backend if you'd like to use this service. If you want to skip that part you can simply update the CSV file provided with some example tasks.
 
 ### 5. Containerize the application
 
