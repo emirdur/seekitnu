@@ -76,8 +76,6 @@ const Account: React.FC = () => {
         )}
         <h2>{userData?.displayName}</h2>
         <h4 onClick={handleLeaderboardClick}>Leaderboard</h4>
-        <h4>Change Credentials</h4>
-        <h4>Privacy Policy</h4>
         <h4 onClick={handleSignOutClick}>Sign Out</h4>
       </div>
 
