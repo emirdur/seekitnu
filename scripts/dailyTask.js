@@ -3,43 +3,38 @@ import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { generateTask } from "../utils/openaiClient";
 
 const prisma = new PrismaClient();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/**
+ * Updates the daily task in the database
+ */
 const updateDailyTask = async () => {
   try {
-    const tasksPath = path.join(__dirname, "..", "tasks.csv");
-    const tasks = fs.readFileSync(tasksPath, "utf-8")
-      .split("\n")
-      .map((line) => {
-        const [date, task] = line.split(",");
-        return { date: date.trim(), task: task.trim().replace(/"/g, "") };
+    const generatedTask = await generateTask();
+
+    if (generatedTask) {
+      await prisma.dailyTask.upsert({
+        where: { id: 1 },
+        update: {
+          task: generatedTask,
+        },
+        create: {
+          id: 1,
+          task: generatedTask,
+        },
       });
 
-    const today = new Date().toISOString().split("T")[0];
-
-    const todayTask = tasks.find((task) => task.date === today);
-
-    if (!todayTask) {
-      throw new Error(`No task found for date: ${today}`);
+      console.log(`Task updated for today: ${generatedTask}`);
+    } else {
+      console.error("Failed to generate task");
     }
-
-    await prisma.dailyTask.upsert({
-      where: { id: 1 },
-      update: {
-        task: todayTask.task,
-      },
-      create: {
-        id: 1,
-        task: todayTask.task,
-      },
-    });
-
-    console.log(`Task updated for ${today}: ${todayTask.task}`);
   } catch (error) {
+    console.error("Error updating task:", error);
   } finally {
     await prisma.$disconnect();
   }
