@@ -37,7 +37,7 @@ cd GoSeekItApp
 
 ### 2. Pull a PostgreSQL Docker Image
 
-Find a PostgreSQL Docker image and download it. Set up the username, password, and database name according to your preference, or use the default configuration (postgres, postgres, postgres). Make sure to update the docker-compose.yml, the backend Dockerfile, and the environment variables accordingly. Additionally, generate an .env file in the backend with the necessary database environment variables, ensuring the database name points to localhost.
+Find a PostgreSQL Docker image and download it. Set up the username, password, and database name according to your preference, or use the default configuration (postgres, postgres, postgres). Make sure to update the docker-compose.yml, the backend Dockerfile, and the environment variables accordingly. Additionally, generate an .env and .env.docker file in the backend with the necessary database environment variables, ensuring the database name points to localhost in .env and the database name points to database in .env.docker.
 
 ### 3. Integrate Firebase Authentication
 
@@ -45,7 +45,7 @@ Next, sign up for a Firebase account, as authentication is handled through this 
 
 ### 4. Bridge OpenAI
 
-The way this application works is by relying on OpenAI to generate the tasks, and then falling back on a CSV file in case there's any fetch fails with the OpenAI API. Therefore, you must sign up for an OpenAI API account and add the configuration key to the .env file in the backend.
+The way this application works is by relying on OpenAI to generate the tasks, and then falling back on a CSV file in case there's any fetch fails with the OpenAI API. Therefore, you must sign up for an OpenAI API account and add the configuration key to the .env and .env.docker files in the backend.
 
 ### 5. Containerize the application
 
