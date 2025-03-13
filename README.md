@@ -1,4 +1,4 @@
-# GoSeekItApp
+# seekitnu
 
 This website encourages college students, particularly those affected by myopia to step outside and seek a given task. The user should take a picture of the description in the prompt given and upload it before the task resets.
 
