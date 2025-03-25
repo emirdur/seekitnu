@@ -31,8 +31,8 @@ Follow these steps to get a local development copy up and running.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/emirdur/GoSeekItApp.git
-cd GoSeekItApp
+git clone https://github.com/emirdur/seekitnu.git
+cd seekitnu
 ```
 
 ### 2. Pull a PostgreSQL Docker Image
