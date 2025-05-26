@@ -18,7 +18,7 @@ Here are some screenshots of a single user interface flow:
       <img width="800" alt="login" src="https://github.com/user-attachments/assets/a6b017b7-437d-4af5-a5d8-4b3404827b09" />
     </td>
     <td style="border: none; padding: 10px;">
-      <img width="800" alt="upload" src="https://github.com/user-attachments/assets/abc8ac41-fd78-4742-b178-f48537952a46" />
+      <img width="800" alt="upload" src="https://github.com/user-attachments/assets/b5abdbc0-3b61-4e35-9a93-81225c37759c" />
     </td>
   </tr>
   <tr>
