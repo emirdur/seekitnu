@@ -12,11 +12,25 @@ This website encourages college students, particularly those affected by myopia 
 
 Here are some screenshots of a single user interface flow:
 
-<img width="600" alt="login" src="https://github.com/user-attachments/assets/a6b017b7-437d-4af5-a5d8-4b3404827b09" />
-<img width="600" alt="upload" src="https://github.com/user-attachments/assets/abc8ac41-fd78-4742-b178-f48537952a46" />
-<img width="600" alt="home" src="https://github.com/user-attachments/assets/0e7c5ab5-eaf6-4a1d-be9c-b529989e0808" />
-<img width="600" alt="account" src="https://github.com/user-attachments/assets/5e96766b-01b5-4709-a0ca-8a5317e4b9d6" />
-
+<table border="0" cellspacing="0" cellpadding="0" align="center" style="border-collapse: collapse;">
+  <tr>
+    <td style="border: none; padding: 10px;">
+      <img width="800" alt="login" src="https://github.com/user-attachments/assets/a6b017b7-437d-4af5-a5d8-4b3404827b09" />
+    </td>
+    <td style="border: none; padding: 10px;">
+      <img width="800" alt="upload" src="https://github.com/user-attachments/assets/abc8ac41-fd78-4742-b178-f48537952a46" />
+    </td>
+  </tr>
+  <tr>
+    <td style="border: none; padding: 10px;">
+      <img width="800" alt="home" src="https://github.com/user-attachments/assets/0e7c5ab5-eaf6-4a1d-be9c-b529989e0808" />
+    </td>
+    <td style="border: none; padding: 10px;">
+      <img width="800" alt="account" src="https://github.com/user-attachments/assets/5e96766b-01b5-4709-a0ca-8a5317e4b9d6" />
+    </td>
+  </tr>
+</table>
+  
 ## Technologies Used
 
 - **Frontend**: React, TypeScript, CSS, Firebase, OpenAI
