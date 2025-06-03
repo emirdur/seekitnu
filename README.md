@@ -2,15 +2,9 @@
 
 This website encourages college students, particularly those affected by myopia to step outside and seek a given task. The user should take a picture of the description in the prompt given and upload it before the task resets.
 
-## Features
+## Preview
 
-- Users can like each others images to decide on the best image of the day.
-- At the end of the day a winner is determined and changes are reflected by the leaderboard.
-- Tasks are generated daily by OpenAI GPT-4o.
-
-## Screenshots
-
-Here are some screenshots of a single user interface flow:
+Here's a preview of a single user interface flow:
 
 <table border="0" cellspacing="0" cellpadding="0" align="center" style="border-collapse: collapse;">
   <tr>
@@ -30,6 +24,12 @@ Here are some screenshots of a single user interface flow:
     </td>
   </tr>
 </table>
+
+## Features
+
+- Users can like each others images to decide on the best image of the day.
+- At the end of the day a winner is determined and changes are reflected by the leaderboard.
+- Tasks are generated daily by OpenAI GPT-4o.
   
 ## Technologies Used
 
